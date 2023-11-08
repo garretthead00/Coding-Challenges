@@ -13,12 +13,20 @@
         Event Listeners are defined with the @symbol. @click
      -->
     <div v-for="(_, x) in 3" :key="x" class="row">
-      <button v-for="(_, y) in 3" :key="y"  class="square" :class="{isWinner: winner?.winningSquares && winner.winningSquares.includes(3*x+y)}" @click="move(x, y)">
+      <button
+        v-for="(_, y) in 3"
+        :key="y"
+        class="square"
+        :class="{ isWinner: winner?.winningSquares && winner.winningSquares.includes(3 * x + y) }"
+        @click="move(x, y)"
+      >
         {{ squares[x][y] }}
       </button>
     </div>
     <h2 class="mt-5">Moves</h2>
-    <div v-for="(record, idx) in moveHistory" :key="idx">{{ idx }}/{{ moveHistory.length }}: Player {{ record.player }} selected {{ record.squareId }}</div>
+    <div v-for="(record, idx) in moveHistory" :key="idx">
+      {{ idx }}/{{ moveHistory.length }}: Player {{ record.player }} selected {{ record.squareId }}
+    </div>
     <h2 class="mt-5">History</h2>
     <div v-for="(player, idx) in history" :key="idx">Game {{ idx + 1 }}: {{ player }} won</div>
   </div>
@@ -33,13 +41,13 @@
  * reactive: same as "ref" but, allows for passing in an object as a parameter. No need to access the value with a dot-property.
  * toRefs: Allows to deconstruct the reactive objects. Without this, destructuring will cause the value to lose it's reactiveness. Converts each
  *          property of the object into it's own ref.
- * 
+ *
  * computed: Computed properties are defined and updated based on the return value of a function. Life ref, except rather than detecting a change in
  *          the value, an outside function will be called to be performed with/on the value that was changed.
- * 
+ *
  * Life-Cycle Hooks
  * onMounted: triggered when the component is mounted in html DOC
- * 
+ *
  * watch: Monitor value changes and perform the logic from the callback function
  */
 import { computed, onMounted, ref, watch } from 'vue'
@@ -59,20 +67,19 @@ const calculateWinner = (squares) => {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i]
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return { player: squares[a], winningSquares: [a,b,c] }
+      return { player: squares[a], winningSquares: [a, b, c] }
     }
   }
   return null
 }
 
 export default {
-
-    /**
-     * setup() serves as an entry point for the Composition API inside components
-     * Called only once, after the props are resolved and the component instance has been created.
-     * Here, place all logic, methods and variables which are needed by the component.
-     * Returning the items that are needed in the component, and access them in the template.
-     */
+  /**
+   * setup() serves as an entry point for the Composition API inside components
+   * Called only once, after the props are resolved and the component instance has been created.
+   * Here, place all logic, methods and variables which are needed by the component.
+   * Returning the items that are needed in the component, and access them in the template.
+   */
   setup() {
     const player = ref('X')
     const squares = ref([
@@ -88,7 +95,7 @@ export default {
     const winner = computed(() => calculateWinner(squares.value.flat()))
 
     const move = (x, y) => {
-        moveHistory.value.push({ player: player.value, squareId: squares.value.length * x + y + 1})
+      moveHistory.value.push({ player: player.value, squareId: squares.value.length * x + y + 1 })
       if (winner.value) return
       squares.value[x][y] = player.value
       player.value = player.value === 'O' ? 'X' : 'O'
@@ -99,7 +106,7 @@ export default {
       squares.value = [
         ['', '', ''],
         ['', '', ''],
-        ['', '', ''],
+        ['', '', '']
       ]
       moveHistory.value = []
     }
@@ -136,7 +143,6 @@ export default {
   text-align: center;
   width: 100px;
 }
-
 
 .isWinner {
   background: green;
